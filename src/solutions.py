@@ -1,19 +1,14 @@
 import re
-from data.input_data import input
-from src.utils import *
+from src.utils import get_first_last_digits, day_3_dicts
 
 
-def day_1_1(day: int):
-    values = get_input(day)
-
+def day_1_1(values: list):
     nums = get_first_last_digits(values)
 
     return sum(nums)
 
 
-def day_1_2(day: int):
-    values = get_input(day)
-
+def day_1_2(values: list):
     sub_dict = {
         "one": "1",
         "two": "2",
@@ -62,15 +57,13 @@ def day_1_2(day: int):
     return sum(nums)
 
 
-def day_2_1(day: int):
+def day_2_1(values: list):
     max_cubes = {"red": 12, "green": 13, "blue": 14}
-
-    games = get_input(day)
 
     # split on colon to get the game numbers as keys:
     games = {
         int(re.sub(r"[^0-9]| ", "", x.split(":")[0])): x.split(":")[1:][0]
-        for x in games
+        for x in values
     }
 
     game_sum = 0
@@ -90,9 +83,7 @@ def day_2_1(day: int):
     return game_sum
 
 
-def day_2_2(day: int):
-    games = get_input(day)
-
+def day_2_2(values: list):
     # split on colon to get the game numbers as keys:
     games = {
         int(re.sub(r"[^0-9]| ", "", x.split(":")[0])): x.split(":")[1:][0]
@@ -122,9 +113,7 @@ def day_2_2(day: int):
     return game_sum
 
 
-def day_3_1(day: int):
-    values = get_input(day)
-
+def day_3_1(values: list):
     num_dict, sym_dict, _ = day_3_dicts(values)
 
     part_sum = 0
@@ -161,9 +150,7 @@ def day_3_1(day: int):
     return part_sum
 
 
-def day_3_2(day: int):
-    values = get_input(day)
-
+def day_3_2(values: list):
     num_dict, _, gear_dict = day_3_dicts(values)
 
     # find the asterisks adjacent to two numbers
@@ -205,9 +192,7 @@ def day_3_2(day: int):
     return prod_sum
 
 
-def day_4_1(day: int):
-    values = get_input(day)
-
+def day_4_1(values: list):
     # separate into winning numbers and numbers we have:
     values = [
         [
@@ -225,9 +210,7 @@ def day_4_1(day: int):
     return sum(scores)
 
 
-def day_4_2(day: int):
-    values = get_input(day)
-
+def day_4_2(values: list):
     # separate into winning numbers and numbers we have with card numbers:
     not_num_pattern = re.compile(r"[^0-9]+")
     cards = {
@@ -251,169 +234,169 @@ def day_4_2(day: int):
     return sum([cards_won[x] for x in cards_won])
 
 
-def day_5_1(day: int):
+def day_5_1(values: list):
     return
 
 
-def day_5_2(day: int):
+def day_5_2(values: list):
     return
 
 
-def day_6_1(day: int):
+def day_6_1(values: list):
     return
 
 
-def day_6_2(day: int):
+def day_6_2(values: list):
     return
 
 
-def day_7_1(day: int):
+def day_7_1(values: list):
     return
 
 
-def day_7_2(day: int):
+def day_7_2(values: list):
     return
 
 
-def day_8_1(day: int):
+def day_8_1(values: list):
     return
 
 
-def day_8_2(day: int):
+def day_8_2(values: list):
     return
 
 
-def day_9_1(day: int):
+def day_9_1(values: list):
     return
 
 
-def day_9_2(day: int):
+def day_9_2(values: list):
     return
 
 
-def day_10_1(day: int):
+def day_10_1(values: list):
     return
 
 
-def day_10_2(day: int):
+def day_10_2(values: list):
     return
 
 
-def day_11_1(day: int):
+def day_11_1(values: list):
     return
 
 
-def day_11_2(day: int):
+def day_11_2(values: list):
     return
 
 
-def day_12_1(day: int):
+def day_12_1(values: list):
     return
 
 
-def day_12_2(day: int):
+def day_12_2(values: list):
     return
 
 
-def day_13_1(day: int):
+def day_13_1(values: list):
     return
 
 
-def day_13_2(day: int):
+def day_13_2(values: list):
     return
 
 
-def day_14_1(day: int):
+def day_14_1(values: list):
     return
 
 
-def day_14_2(day: int):
+def day_14_2(values: list):
     return
 
 
-def day_15_1(day: int):
+def day_15_1(values: list):
     return
 
 
-def day_15_2(day: int):
+def day_15_2(values: list):
     return
 
 
-def day_16_1(day: int):
+def day_16_1(values: list):
     return
 
 
-def day_16_2(day: int):
+def day_16_2(values: list):
     return
 
 
-def day_18_1(day: int):
+def day_17_1(values: list):
     return
 
 
-def day_18_2(day: int):
+def day_17_2(values: list):
     return
 
 
-def day_19_1(day: int):
+def day_18_1(values: list):
     return
 
 
-def day_19_2(day: int):
+def day_18_2(values: list):
     return
 
 
-def day_20_1(day: int):
+def day_19_1(values: list):
     return
 
 
-def day_20_2(day: int):
+def day_19_2(values: list):
     return
 
 
-def day_21_1(day: int):
+def day_20_1(values: list):
     return
 
 
-def day_21_2(day: int):
+def day_20_2(values: list):
     return
 
 
-def day_22_1(day: int):
+def day_21_1(values: list):
     return
 
 
-def day_22_2(day: int):
+def day_21_2(values: list):
     return
 
 
-def day_23_1(day: int):
+def day_22_1(values: list):
     return
 
 
-def day_23_2(day: int):
+def day_22_2(values: list):
     return
 
 
-def day_24_1(day: int):
+def day_23_1(values: list):
     return
 
 
-def day_24_2(day: int):
+def day_23_2(values: list):
     return
 
 
-def day_25_1(day: int):
+def day_24_1(values: list):
     return
 
 
-def day_25_2(day: int):
+def day_24_2(values: list):
     return
 
 
-def day_17_1(day: int):
+def day_25_1(values: list):
     return
 
 
-def day_17_2(day: int):
+def day_25_2(values: list):
     return

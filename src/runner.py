@@ -1,4 +1,5 @@
 from src.solutions import *
+from src.utils import get_input
 
 day_funcs = {
     1: (day_1_1, day_1_2),
@@ -30,8 +31,9 @@ day_funcs = {
 
 
 def daily_run(day: int):
-    part_1 = day_funcs[day][0](day)
+    values = get_input(day)
+    part_1 = day_funcs[day][0](values)
 
-    part_2 = day_funcs[day][1](day)
+    part_2 = day_funcs[day][1](values)
 
     return part_1, part_2
