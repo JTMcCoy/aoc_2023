@@ -6,11 +6,7 @@ from src.utils import *
 def day_1_1(day: int):
     values = get_input(day)
 
-    # we need to extract the digits and remove the strings
-    nums = [re.sub(r"[^0-9]", "", x) for x in values]
-
-    # we need the first and last digit for each
-    nums = [int(x[0] + x[-1]) for x in nums]
+    nums = get_first_last_digits(values)
 
     return sum(nums)
 
@@ -30,11 +26,11 @@ def day_1_2(day: int):
         "nine": "9",
     }
 
+    pattern = re.compile(r"one|two|three|four|five|six|seven|eight|nine")
     nums = []
     for value in values:
         # use search to find index of string digits and place the value in front of it
         # repeated search from new starting points to find all occurences
-        pattern = re.compile(r"one|two|three|four|five|six|seven|eight|nine")
         num = value
         # track length of string and of start point for search
         num_len = len(num)
@@ -61,11 +57,7 @@ def day_1_2(day: int):
                 i += 1
         nums.append(num)
 
-    # we need to extract the digits and remove the strings
-    nums = [re.sub(r"[^0-9]", "", x) for x in nums]
-
-    # we need the first and last digit for each
-    nums = [int(x[0] + x[-1]) for x in nums]
+    nums = get_first_last_digits(values)
 
     return sum(nums)
 
@@ -73,8 +65,7 @@ def day_1_2(day: int):
 def day_2_1(day: int):
     max_cubes = {"red": 12, "green": 13, "blue": 14}
 
-    # get each line as an entry
-    games = [x for x in input[day].split("\n")]
+    games = get_input(day)
 
     # split on colon to get the game numbers as keys:
     games = {
@@ -100,8 +91,7 @@ def day_2_1(day: int):
 
 
 def day_2_2(day: int):
-    # get each line as an entry
-    games = [x for x in input[day].split("\n")]
+    games = get_input(day)
 
     # split on colon to get the game numbers as keys:
     games = {
