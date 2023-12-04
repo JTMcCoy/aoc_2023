@@ -1,11 +1,15 @@
 from src.runner import daily_run
+import datetime as dt
 
 day = 4
 
+start = dt.datetime.now()
 part1, part2 = daily_run(day)
-
+end_t = dt.datetime.now()
 print(part1)
 print(part2)
+
+print("Runtime: {}s".format((end_t - start).total_seconds()))
 
 import re
 
