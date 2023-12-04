@@ -2,10 +2,11 @@ from data.input_data import input
 
 import re
 
+
 def get_input(day: int) -> list:
     # get each line as an entry
     values = [x for x in input[day].split("\n")]
-    
+
     return values
 
 
@@ -58,3 +59,13 @@ def day_3_dicts(
             else:
                 break
     return num_dict, sym_dict, gear_dict
+
+
+def get_first_last_digits(values: list) -> list:
+    # we need to extract the digits and remove the strings
+    nums = [re.sub(r"[^0-9]", "", x) for x in values]
+
+    # we need the first and last digit for each
+    nums = [int(x[0] + x[-1]) for x in nums]
+
+    return nums
