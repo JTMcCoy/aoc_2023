@@ -1,5 +1,5 @@
 import re
-from src.utils import get_first_last_digits, day_3_dicts
+from src.utils import get_first_last_digits, day_3_dicts, day_5_seed_loc
 
 
 def day_1_1(values: list):
@@ -87,7 +87,7 @@ def day_2_2(values: list):
     # split on colon to get the game numbers as keys:
     games = {
         int(re.sub(r"[^0-9]| ", "", x.split(":")[0])): x.split(":")[1:][0]
-        for x in games
+        for x in values
     }
 
     game_sum = 0
@@ -229,16 +229,48 @@ def day_4_2(values: list):
     for card in lens:
         wins = range(card + 1, card + lens[card] + 1)
         for win_card in wins:
-            cards_won[win_card-1] += cards_won[card-1]
-            
+            cards_won[win_card - 1] += cards_won[card - 1]
+
     return sum(cards_won)
 
 
 def day_5_1(values: list):
-    return
+    dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in values}
+    seed_nums = [int(i) for i in dicts["seeds"][0]]
+    del dicts["seeds"]
+
+    # iterating over each seed number
+    loc_nums = day_5_seed_loc(seed_nums, dicts)
+
+    # find lowest loc_num:
+    loc_nums.sort()
+
+    return loc_nums[0]
 
 
 def day_5_2(values: list):
+    dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in values}
+    seed_nums = [int(i) for i in dicts["seeds"][0]]
+    del dicts["seeds"]
+
+    # get the range of seed numbers:
+    seed_nums = [[i, j] for i, j in zip(seed_nums[0:None:2], seed_nums[1:None:2])]
+    print(len(seed_nums))
+
+    # lowest_loc = 1e50
+    # for i, seed_range in enumerate(seed_nums):
+    #     print(i)
+    #     seed_st = seed_range[0]
+    #     seed_inc = seed_range[1]
+    #     seed_nums_ = (seed_st + x for x in range(seed_inc))
+    #     loc_nums = day_5_seed_loc(seed_nums_, dicts)
+
+    #     # find lowest loc_num:
+    #     loc_nums.sort()
+
+    #     if loc_nums[0] < lowest_loc:
+    #         lowest_loc = loc_nums[0]
+    #     del loc_nums
     return
 
 

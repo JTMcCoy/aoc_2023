@@ -4,8 +4,12 @@ import re
 
 
 def get_input(day: int) -> list:
-    # get each line as an entry
-    values = [x for x in input[day].split("\n")]
+    if day == 5:
+        # get each double line as an entry
+        values = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
+    else:
+        # get each line as an entry
+        values = [x for x in input[day].split("\n")]
 
     return values
 
@@ -69,3 +73,26 @@ def get_first_last_digits(values: list) -> list:
     nums = [int(x[0] + x[-1]) for x in nums]
 
     return nums
+
+
+def day_5_seed_loc(seed_nums: list, dicts: dict):
+    loc_nums = []
+    for seed in seed_nums:
+        prev_num = seed
+        for x in dicts:
+            seed_in_mapping = False
+            while not seed_in_mapping:
+                # source mappings for each row:
+                for row in dicts[x]:
+                    if (prev_num >= int(row[1])) & (
+                        prev_num < (int(row[1]) + int(row[-1]))
+                    ):
+                        prev_num = int(row[0]) + (prev_num - int(row[1]))
+                        seed_in_mapping = True
+                        break
+
+                # if prev_num not in the mapping, it keeps its value, don't update
+                seed_in_mapping = True
+        loc_nums.append(prev_num)
+
+    return loc_nums
