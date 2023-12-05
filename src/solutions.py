@@ -225,13 +225,13 @@ def day_4_2(values: list):
     lens = {x: len([y for y in cards[x][1] if y in cards[x][0]]) for x in cards}
 
     # loop through cards and add copies:
-    cards_won = {x: 1 for x in lens}
+    cards_won = [1 for _ in lens]
     for card in lens:
         wins = range(card + 1, card + lens[card] + 1)
         for win_card in wins:
-            cards_won[win_card] += cards_won[card]
-
-    return sum([cards_won[x] for x in cards_won])
+            cards_won[win_card-1] += cards_won[card-1]
+            
+    return sum(cards_won)
 
 
 def day_5_1(values: list):
