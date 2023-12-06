@@ -7,6 +7,8 @@ def get_input(day: int) -> list:
     if day == 5:
         # get each double line as an entry
         values = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
+    elif day == 6:
+        values = re.sub(r" +", " ", input[day])
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]
@@ -95,3 +97,11 @@ def day_5_in_out(in_val: int, map_dict: dict) -> int:
             break
 
     return output
+
+
+def day_6_dist(hold: int, dur: int) -> int:
+    # dist = speed*(dur-hold)
+    # speed = hold
+    dist = hold*(dur-hold)
+    
+    return dist
