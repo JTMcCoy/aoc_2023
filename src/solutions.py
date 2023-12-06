@@ -1,5 +1,5 @@
 import re
-from src.utils import get_first_last_digits, day_3_dicts, day_5_seed_loc
+from src.utils import get_first_last_digits, day_3_dicts, day_5_seed_loc, day_6_dist
 
 
 def day_1_1(values: list):
@@ -258,13 +258,12 @@ def day_5_2(values: list):
 
     # TODO this will never complete
     # logic needs to be a search backwards over ranges that could minimise?
-    
+
     # lowest_loc = 1e50
     # for i, seed_range in enumerate(seed_nums):
-    #     print(i)
     #     seed_st = seed_range[0]
     #     seed_inc = seed_range[1]
-    #     seed_nums_ = (seed_st + x for x in range(seed_inc))
+    #     seed_nums_ = [seed_st, seed_st + seed_inc - 1]
     #     loc_nums = day_5_seed_loc(seed_nums_, dicts)
 
     #     # find lowest loc_num:
@@ -273,15 +272,46 @@ def day_5_2(values: list):
     #     if loc_nums[0] < lowest_loc:
     #         lowest_loc = loc_nums[0]
     #     del loc_nums
+
     return
 
 
 def day_6_1(values: list):
-    return
+    # separate into lists of times and distances:
+    values = [
+        [int(y) for y in x.split(":")[-1].strip().split(" ")]
+        for x in values.split("\n")
+    ]
+
+    ways = []
+    for dur, dist_record in zip(values[0], values[1]):
+        way = 0
+        for hold in range(dur):
+            dist = day_6_dist(hold, dur)
+            if dist > dist_record:
+                way += 1
+        ways.append(way)
+
+    prod = 1
+    for way in ways:
+        prod *= way
+    return prod
 
 
 def day_6_2(values: list):
-    return
+    # separate into lists of times and distances:
+    # remove all spaces, split into two numbers
+    values = [int(x.split(":")[-1]) for x in re.sub(r" ", "", values).split("\n")]
+
+    dur, dist_record = values[0], values[1]
+
+    way = 0
+    for hold in range(dur):
+        dist = day_6_dist(hold, dur)
+        if dist > dist_record:
+            way += 1
+
+    return way
 
 
 def day_7_1(values: list):
