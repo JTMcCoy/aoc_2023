@@ -80,19 +80,29 @@ def day_5_seed_loc(seed_nums: list, dicts: dict):
     for seed in seed_nums:
         prev_num = seed
         for x in dicts:
-            seed_in_mapping = False
-            while not seed_in_mapping:
-                # source mappings for each row:
-                for row in dicts[x]:
-                    if (prev_num >= int(row[1])) & (
-                        prev_num < (int(row[1]) + int(row[-1]))
-                    ):
-                        prev_num = int(row[0]) + (prev_num - int(row[1]))
-                        seed_in_mapping = True
-                        break
-
-                # if prev_num not in the mapping, it keeps its value, don't update
-                seed_in_mapping = True
+            prev_num = day_5_in_out(prev_num, dicts[x])
         loc_nums.append(prev_num)
 
     return loc_nums
+
+
+def day_5_in_out(in_val: int, map_dict: dict) -> int:
+    # given an input, map to output
+    output = in_val
+    for row in map_dict:
+        if (in_val >= int(row[1])) & (in_val < (int(row[1]) + int(row[-1]))):
+            output = int(row[0]) + (in_val - int(row[1]))
+            break
+
+    return output
+
+
+def day_5_min_dest(map_dict: dict):
+    inputs = [int(row[1]) for row in map_dict]
+    outputs = [int(row[0]) for row in map_dict]
+
+    # find input which minimises output:
+
+    # find unmapped input which is smaller than smallest output:
+
+    return
