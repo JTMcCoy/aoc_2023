@@ -95,14 +95,3 @@ def day_5_in_out(in_val: int, map_dict: dict) -> int:
             break
 
     return output
-
-
-def day_5_min_dest(map_dict: dict):
-    inputs = [int(row[1]) for row in map_dict]
-    outputs = [int(row[0]) for row in map_dict]
-
-    # find input which minimises output:
-
-    # find unmapped input which is smaller than smallest output:
-
-    return
