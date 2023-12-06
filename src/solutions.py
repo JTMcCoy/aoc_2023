@@ -255,8 +255,10 @@ def day_5_2(values: list):
 
     # get the range of seed numbers:
     seed_nums = [[i, j] for i, j in zip(seed_nums[0:None:2], seed_nums[1:None:2])]
-    print(len(seed_nums))
 
+    # TODO this will never complete
+    # logic needs to be a search backwards over ranges that could minimise?
+    
     # lowest_loc = 1e50
     # for i, seed_range in enumerate(seed_nums):
     #     print(i)
