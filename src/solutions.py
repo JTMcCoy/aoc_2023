@@ -243,9 +243,9 @@ def day_5_1(values: list):
     loc_nums = day_5_seed_loc(seed_nums, dicts)
 
     # find lowest loc_num:
-    loc_nums.sort()
+    loc_min = min(loc_nums)
 
-    return loc_nums[0]
+    return loc_min
 
 
 def day_5_2(values: list):
