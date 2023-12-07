@@ -1,4 +1,5 @@
 from data.input_data import input
+from collections import Counter
 
 import re
 
@@ -102,6 +103,62 @@ def day_5_in_out(in_val: int, map_dict: dict) -> int:
 def day_6_dist(hold: int, dur: int) -> int:
     # dist = speed*(dur-hold)
     # speed = hold
-    dist = hold*(dur-hold)
-    
+    dist = hold * (dur - hold)
+
     return dist
+
+
+def day_7_map_to_int(str_in: str, part: int = 1) -> list:
+    map_dict = {
+        "A": 14,
+        "K": 13,
+        "Q": 12,
+        "J": 11 if part == 1 else 1,
+        "T": 10,
+        "9": 9,
+        "8": 8,
+        "7": 7,
+        "6": 6,
+        "5": 5,
+        "4": 4,
+        "3": 3,
+        "2": 2,
+    }
+    output = [map_dict[x] for x in str_in]
+
+    return output
+
+
+def day_7_hands_dict(values: list) -> dict:
+    # separate into hands and bids:
+    hands = {x.split()[0]: x.split()[1] for x in values}
+
+    # use Counter to get count of each value
+    hands = {
+        x: {
+            "bid": hands[x],
+            "cards": list(Counter(x).keys()),
+            "counts": list(Counter(x).values()),
+        }
+        for x in hands
+    }
+
+    # rank using rules:
+    for x in hands:
+        if 5 in hands[x]["counts"]:
+            hands[x]["rank"] = 7
+        elif 4 in hands[x]["counts"]:
+            hands[x]["rank"] = 6
+        elif (3 in hands[x]["counts"]) & (2 in hands[x]["counts"]):
+            hands[x]["rank"] = 5
+        elif (3 in hands[x]["counts"]) & (2 not in hands[x]["counts"]):
+            hands[x]["rank"] = 4
+        elif 2 in hands[x]["counts"]:
+            if len(hands[x]["counts"]) == 3:
+                # it's two pairs
+                hands[x]["rank"] = 3
+            else:
+                hands[x]["rank"] = 2
+        else:
+            hands[x]["rank"] = 1
+    return hands
