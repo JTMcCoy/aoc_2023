@@ -146,18 +146,23 @@ def day_7_hands_dict(values: list) -> dict:
     # rank using rules:
     for x in hands:
         if 5 in hands[x]["counts"]:
+            # five of a kind
             hands[x]["rank"] = 7
         elif 4 in hands[x]["counts"]:
+            # four of a kind
             hands[x]["rank"] = 6
         elif (3 in hands[x]["counts"]) & (2 in hands[x]["counts"]):
+            # full house
             hands[x]["rank"] = 5
         elif (3 in hands[x]["counts"]) & (2 not in hands[x]["counts"]):
+            # three of a kind
             hands[x]["rank"] = 4
         elif 2 in hands[x]["counts"]:
             if len(hands[x]["counts"]) == 3:
                 # it's two pairs
                 hands[x]["rank"] = 3
             else:
+                # one pair
                 hands[x]["rank"] = 2
         else:
             hands[x]["rank"] = 1
