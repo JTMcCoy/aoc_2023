@@ -1,4 +1,5 @@
 import re
+import math
 from src.utils import (
     get_first_last_digits,
     day_3_dicts,
@@ -6,6 +7,7 @@ from src.utils import (
     day_6_dist,
     day_7_map_to_int,
     day_7_hands_dict,
+    day_8_inputs,
 )
 
 
@@ -371,12 +373,58 @@ def day_7_2(values: list):
     return sum(wins)
 
 
-def day_8_1(values: list):
-    return
+def day_8_1(values: tuple):
+    inst, seq = values
+
+    # iterate over the dict until we find ZZZ:
+    len_inst = len(inst)
+    step = 0
+    rpt = 0
+    found = False
+    prev_loc = "AAA"
+    while not found:
+        if step == len_inst:
+            rpt += 1
+            step = step - len_inst
+        next_loc = seq[prev_loc][inst[step]]
+        step += 1
+        if next_loc == "ZZZ":
+            found = True
+        else:
+            prev_loc = next_loc
+
+    return rpt * len_inst + step
 
 
-def day_8_2(values: list):
-    return
+def day_8_2(values: tuple):
+    inst, seq = values
+
+    # nodes that end with A
+    start_nodes = [x for x in seq if x[-1] == "A"]
+
+    # find the first detection for each starting node
+    # for some reason, the number of steps is the least common multiple
+    # of the first detections... they must be cyclic graphs?
+    len_inst = len(inst)
+    first_det = []
+    for node in start_nodes:
+        step = 0
+        rpt = 0
+        found = False
+        prev_loc = node
+        while not found:
+            if step == len_inst:
+                rpt += 1
+                step = step - len_inst
+            next_loc = seq[prev_loc][inst[step]]
+            step += 1
+            if next_loc[-1] == "Z":
+                first_det.append(rpt * len_inst + step)
+                found = True
+            else:
+                prev_loc = next_loc
+
+    return math.lcm(*first_det)
 
 
 def day_9_1(values: list):
