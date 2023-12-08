@@ -336,7 +336,7 @@ def day_7_2(values: list):
     hands = day_7_hands_dict(values)
 
     # where J is present, update ranks:
-    for x in [x for x in hands if "J" in hands[x]["cards"]]:
+    for x in [i for i in hands if "J" in hands[i]["cards"]]:
         j_idx = hands[x]["cards"].index("J")
         j_count = hands[x]["counts"][j_idx]
 
@@ -346,12 +346,12 @@ def day_7_2(values: list):
         elif (3 in hands[x]["counts"]) & (2 in hands[x]["counts"]):
             # either way this can be five of a kind:
             hands[x]["rank"] = 7
-        elif 3 in hands[x]["counts"]:
-            # this should be four of a kind:
+        elif (3 in hands[x]["counts"]) & (2 not in hands[x]["counts"]):
+            # 3 Js and two others, or a triple and a J: four of a kind:
             hands[x]["rank"] = 6
         elif 2 in hands[x]["counts"]:
             if (len(hands[x]["counts"]) == 3) & (j_count == 2):
-                # it's two pairs, can become four of a kind
+                # pair and two Js, can become four of a kind
                 hands[x]["rank"] = 6
             elif (len(hands[x]["counts"]) == 3) & (j_count == 1):
                 # it's two pairs, one J, full house
@@ -359,6 +359,9 @@ def day_7_2(values: list):
             else:
                 # J pair, or pair and J, becomes three of a kind:
                 hands[x]["rank"] = 4
+        else:
+            # a J and four others, one pair:
+            hands[x]["rank"] = 2
 
     hands_sorted = [(x, hands[x]["rank"], day_7_map_to_int(x, part=2)) for x in hands]
     hands_sorted.sort(key=lambda pair: (pair[1], pair[2]))
