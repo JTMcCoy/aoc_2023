@@ -10,6 +10,10 @@ def get_input(day: int) -> list:
         values = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
     elif day == 6:
         values = re.sub(r" +", " ", input[day])
+    elif day == 8:
+        # get the instructions and the network:
+        values = input[day].split("\n\n")
+        values = day_8_inputs(values)
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]
@@ -167,3 +171,18 @@ def day_7_hands_dict(values: list) -> dict:
         else:
             hands[x]["rank"] = 1
     return hands
+
+
+def day_8_inputs(values: dict) -> tuple:
+    inst, seq = values
+
+    # get each line as an entry, split into location and connections:
+    seq = [x.split(" = ") for x in seq.split("\n")]
+
+    # get the tuple of destination:
+    seq = {x[0]: re.sub(r"[(|)]", "", x[1]).split(", ") for x in seq}
+
+    # map instructions to 0, 1:
+    inst = [0 if x == "L" else 1 for x in inst]
+
+    return inst, seq
