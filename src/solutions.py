@@ -7,7 +7,6 @@ from src.utils import (
     day_6_dist,
     day_7_map_to_int,
     day_7_hands_dict,
-    day_8_inputs,
 )
 
 
@@ -342,7 +341,7 @@ def day_7_2(values: list):
         j_idx = hands[x]["cards"].index("J")
         j_count = hands[x]["counts"][j_idx]
 
-        if 4 in hands[x]["counts"]:
+        if (4 in hands[x]["counts"]) | (5 in hands[x]["counts"]):
             # if it's four Js or 1 J and four other, it will be five of a kind:
             hands[x]["rank"] = 7
         elif (3 in hands[x]["counts"]) & (2 in hands[x]["counts"]):
