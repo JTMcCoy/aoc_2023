@@ -8,11 +8,11 @@ def get_input(day: int) -> list:
     if day == 5:
         # get each double line as an entry
         lines = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
-        
+
         dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in lines}
         seed_nums = [int(i) for i in dicts["seeds"][0]]
         del dicts["seeds"]
-        
+
         values = dicts, seed_nums
     elif day == 6:
         values = re.sub(r" +", " ", input[day])
@@ -20,6 +20,9 @@ def get_input(day: int) -> list:
         # get the instructions and the network:
         values = input[day].split("\n\n")
         values = day_8_inputs(values)
+    elif day == 9:
+        # get each line as an entry and split to ints
+        values = [[int(y) for y in x.split(" ")] for x in input[day].split("\n")]
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]
