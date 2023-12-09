@@ -443,10 +443,25 @@ def day_8_2(values: tuple):
 
 
 def day_9_1(values: list):
-    return
+    val_sum = 0  # total for sum of next values, part 1
+    prev_val = 0  # total for sum of previous values, part 2
+    for row in values:
+        diff = row[:]
+        prev_diff = 0
+        neg = -1
+        while diff:
+            val_sum += diff[-1]
+            diff = [x - y for x, y in zip(diff[1:], diff)]
+            if diff:
+                prev_diff += neg*diff[0]
+                neg *= -1  # sign changes each row
+        prev_val += (row[0] + prev_diff)
+    
+    return val_sum, prev_val
 
 
 def day_9_2(values: list):
+    # done in part 1
     return
 
 
