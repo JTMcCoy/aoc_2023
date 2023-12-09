@@ -4,6 +4,7 @@ from src.utils import (
     get_first_last_digits,
     day_3_dicts,
     day_5_seed_loc,
+    day_5_in_out,
     day_6_dist,
     day_7_map_to_int,
     day_7_hands_dict,
@@ -242,10 +243,8 @@ def day_4_2(values: list):
     return sum(cards_won)
 
 
-def day_5_1(values: list):
-    dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in values}
-    seed_nums = [int(i) for i in dicts["seeds"][0]]
-    del dicts["seeds"]
+def day_5_1(values: tuple):
+    dicts, seed_nums = values
 
     # iterating over each seed number
     loc_nums = day_5_seed_loc(seed_nums, dicts)
@@ -256,32 +255,49 @@ def day_5_1(values: list):
     return loc_min
 
 
-def day_5_2(values: list):
-    dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in values}
-    seed_nums = [int(i) for i in dicts["seeds"][0]]
-    del dicts["seeds"]
+def day_5_2(values: tuple):
+    dicts, seed_nums = values
 
     # get the range of seed numbers:
-    seed_nums = [[i, j] for i, j in zip(seed_nums[0:None:2], seed_nums[1:None:2])]
+    seed_nums = [
+        [i, i + j - 1] for i, j in zip(seed_nums[0:None:2], seed_nums[1:None:2])
+    ]
+    seed_nums.sort()
 
-    # TODO this will never complete
-    # logic needs to be a search backwards over ranges that could minimise?
+    # do a forward pass, converting the boundaries of each range into the output domain
+    # also split the ranges where they intersect with the input defined ranges
+    min_locs = []
+    for bnd in seed_nums:
+        bnds = list(set(bnd))
+        bnds.sort()
+        for x in dicts:
+            # update the boundaries given the input ranges
+            for row in dicts[x]:
+                # split ranges given in_start and in_end:
+                in_start = int(row[1])
+                in_end = int(row[1]) + int(row[-1])
+                if in_start > bnds[0]:
+                    bnds = list(set(bnds + [in_start, in_start - 1]))
+                    bnds.sort()
+                if in_end < bnds[-1]:
+                    bnds = list(set(bnds + [in_end, in_end + 1]))
+                    bnds.sort()
 
-    # lowest_loc = 1e50
-    # for i, seed_range in enumerate(seed_nums):
-    #     seed_st = seed_range[0]
-    #     seed_inc = seed_range[1]
-    #     seed_nums_ = [seed_st, seed_st + seed_inc - 1]
-    #     loc_nums = day_5_seed_loc(seed_nums_, dicts)
+            # project bnds to next dict's input:
+            out_vals = []
+            for in_val in bnds:
+                out_vals.append(day_5_in_out(in_val, dicts[x]))
 
-    #     # find lowest loc_num:
-    #     loc_nums.sort()
+            # print(bnds)
+            # print(out_vals)
 
-    #     if loc_nums[0] < lowest_loc:
-    #         lowest_loc = loc_nums[0]
-    #     del loc_nums
+            bnds = list(set(out_vals[:]))
+            bnds.sort()
 
-    return
+        # keep the minimum output:
+        min_locs.append(min(bnds))
+
+    return min(min_locs)
 
 
 def day_6_1(values: list):
