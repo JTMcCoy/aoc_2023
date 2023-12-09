@@ -7,7 +7,12 @@ import re
 def get_input(day: int) -> list:
     if day == 5:
         # get each double line as an entry
-        values = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
+        lines = [[y.strip() for y in x.split(":")] for x in input[day].split("\n\n")]
+        
+        dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in lines}
+        seed_nums = [int(i) for i in dicts["seeds"][0]]
+        
+        values = dicts, seed_nums
     elif day == 6:
         values = re.sub(r" +", " ", input[day])
     elif day == 8:
