@@ -11,6 +11,7 @@ def get_input(day: int) -> list:
         
         dicts = {x[0]: [y.strip().split(" ") for y in x[1].split("\n")] for x in lines}
         seed_nums = [int(i) for i in dicts["seeds"][0]]
+        del dicts["seeds"]
         
         values = dicts, seed_nums
     elif day == 6:
