@@ -8,6 +8,8 @@ from src.utils import (
     day_6_dist,
     day_7_map_to_int,
     day_7_hands_dict,
+    day_10_s_mapper,
+    day_10_dir,
 )
 
 
@@ -453,10 +455,10 @@ def day_9_1(values: list):
             val_sum += diff[-1]
             diff = [x - y for x, y in zip(diff[1:], diff)]
             if diff:
-                prev_diff += neg*diff[0]
+                prev_diff += neg * diff[0]
                 neg *= -1  # sign changes each row
-        prev_val += (row[0] + prev_diff)
-    
+        prev_val += row[0] + prev_diff
+
     return val_sum, prev_val
 
 
@@ -466,6 +468,20 @@ def day_9_2(values: list):
 
 
 def day_10_1(values: list):
+    # split into each element:
+    m = [x for x in values]
+
+    s_pos, row_d, col_d = day_10_s_mapper(m)
+    
+    # check each possible vertical starting direction:
+    for v_dir in row_d:
+        pos = list(s_pos)
+        print(pos)
+        
+    # check each possible horizontal starting direction:
+    for h_dir in col_d:
+        print(h_dir)
+    
     return
 
 
