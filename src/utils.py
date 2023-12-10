@@ -195,3 +195,44 @@ def day_8_inputs(values: dict) -> tuple:
     inst = [0 if x == "L" else 1 for x in inst]
 
     return inst, seq
+
+
+def day_10_dir(c: str):
+    if c == "|":
+        return [[-1, 1], [0, 0]]
+    elif c == "-":
+        return [[0, 0], [-1, 1]]
+    elif c == "L":
+        return [[-1, 0], [0, 1]]
+    elif c == "J":
+        return [[-1, 0], [-1, 0]]
+    elif c == "7":
+        return [[0, 1], [-1, 0]]
+    elif c == "F":
+        return [[0, 1], [0, 1]]
+    else:
+        return None
+
+
+def day_10_s_mapper(m):
+    # find possible directions that the s could move in
+    # first, find S:
+    for i, row in enumerate(m):
+        if "S" in row:
+            row_s = i
+            col_s = row.index("S")
+
+    # then see which directions it could go:
+    row_d = []
+    col_d = []
+    for i in [-1, 1]:
+        if m[row_s + i]:
+            dir = day_10_dir(m[row_s + i][col_s])
+            if (-i) in dir[0]:
+                row_d.append(i)
+        if m[row_s][col_s + i]:
+            dir = day_10_dir(m[row_s][col_s + i])
+            if (-i) in dir[1]:
+                col_d.append(i)
+
+    return [row_s, col_s], row_d, col_d
