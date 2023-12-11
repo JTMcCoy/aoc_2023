@@ -199,17 +199,19 @@ def day_8_inputs(values: dict) -> tuple:
 
 def day_10_dir(c: str):
     if c == "|":
-        return [[-1, 1], [0, 0]]
+        return [[-1, 1], []]
     elif c == "-":
-        return [[0, 0], [-1, 1]]
+        return [[], [-1, 1]]
     elif c == "L":
-        return [[-1, 0], [0, 1]]
+        return [[-1], [1]]
     elif c == "J":
-        return [[-1, 0], [-1, 0]]
+        return [[-1], [-1]]
     elif c == "7":
-        return [[0, 1], [-1, 0]]
+        return [[1], [-1]]
     elif c == "F":
-        return [[0, 1], [0, 1]]
+        return [[1], [1]]
+    elif c == ".":
+        return [[0], [0]]
     else:
         return None
 
@@ -227,12 +229,26 @@ def day_10_s_mapper(m):
     col_d = []
     for i in [-1, 1]:
         if m[row_s + i]:
-            dir = day_10_dir(m[row_s + i][col_s])
-            if (-i) in dir[0]:
+            directions = day_10_dir(m[row_s + i][col_s])
+            if (-i) in directions[0]:
                 row_d.append(i)
         if m[row_s][col_s + i]:
-            dir = day_10_dir(m[row_s][col_s + i])
-            if (-i) in dir[1]:
+            directions = day_10_dir(m[row_s][col_s + i])
+            if (-i) in directions[1]:
                 col_d.append(i)
 
-    return [row_s, col_s], row_d, col_d
+    return [row_s, col_s], [row_d, col_d]
+
+
+def day_10_next_pos(pos: list, d: list):
+    # get vertical moves:
+    next_vert = []
+    for dv in d[0]:
+        next_vert.append([pos[0] + dv, pos[1]])
+
+    # get horizontal moves:
+    next_hori = []
+    for dh in d[1]:
+        next_hori.append([pos[0], pos[1] + dh])
+
+    return next_vert + next_hori

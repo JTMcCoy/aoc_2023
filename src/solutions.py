@@ -10,6 +10,7 @@ from src.utils import (
     day_7_hands_dict,
     day_10_s_mapper,
     day_10_dir,
+    day_10_next_pos,
 )
 
 
@@ -471,18 +472,30 @@ def day_10_1(values: list):
     # split into each element:
     m = [x for x in values]
 
-    s_pos, row_d, col_d = day_10_s_mapper(m)
-    
-    # check each possible vertical starting direction:
-    for v_dir in row_d:
-        pos = list(s_pos)
-        print(pos)
-        
-    # check each possible horizontal starting direction:
-    for h_dir in col_d:
-        print(h_dir)
-    
-    return
+    s_pos, d = day_10_s_mapper(m)
+
+    # first step is to the first starting points:
+    steps = 1
+    prev_pos = [s_pos, s_pos]
+    cur_pos = day_10_next_pos(s_pos, d)
+    found = False
+    while not found:
+        # take a step from each position:
+        next_pos = []
+        for pos, prv in zip(cur_pos, prev_pos):
+            next_pos += [
+                x
+                for x in day_10_next_pos(pos, day_10_dir(m[pos[0]][pos[1]]))
+                if x != prv
+            ]
+        if next_pos[0] == next_pos[1]:
+            found = True
+        else:
+            prev_pos = cur_pos
+            cur_pos = next_pos
+        steps += 1
+
+    return steps
 
 
 def day_10_2(values: list):
