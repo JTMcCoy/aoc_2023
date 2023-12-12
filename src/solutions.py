@@ -1,6 +1,7 @@
 import re
 import math
 import numpy as np
+import itertools
 from src.utils import (
     get_first_last_digits,
     day_3_dicts,
@@ -12,6 +13,7 @@ from src.utils import (
     day_10_s_mapper,
     day_10_dir,
     day_10_next_pos,
+    day_12_groups,
 )
 
 
@@ -605,7 +607,40 @@ def day_11_2(values: list):
 
 
 def day_12_1(values: list):
-    return
+    springs = [x.split(" ")[0] for x in values]
+    grps = [[int(y) for y in x.split(" ")[1].replace(",", "")] for x in values]
+
+    # map springs to ints:
+    springs = [
+        [y if y == "?" else int(y) for y in x.replace(".", "0").replace("#", "1")]
+        for x in springs
+    ]
+
+    combinations = 0
+    for spring, group in zip(springs, grps):
+        # non-working springs in group:
+        group_spr = sum(group)
+
+        # non-working springs in spring:
+        n_spr = sum([x for x in spring if x != "?"])
+
+        # non_working springs to add:
+        miss_spr = group_spr - n_spr
+
+        # unknown springs:
+        unknown_idx = [i for i, x in enumerate(spring) if x == "?"]
+        n_un = len(unknown_idx)
+
+        perm_list = [1] * miss_spr + [0] * (n_un - miss_spr)
+
+        # TODO this iterates over too many permutations, need to be able to prune
+        # for perm in set([c for c in itertools.permutations(perm_list)]):
+            # for idx, perm_val in zip(unknown_idx, perm):
+            #     spring[idx] = perm_val
+            # if group == day_12_groups(spring):
+            #     combinations += 1
+
+    return combinations
 
 
 def day_12_2(values: list):

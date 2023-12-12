@@ -1,5 +1,6 @@
 from data.input_data import input
 from collections import Counter
+import itertools
 
 import re
 
@@ -198,6 +199,7 @@ def day_8_inputs(values: dict) -> tuple:
 
 
 def day_10_dir(c: str):
+    # return possible directions defined by pipe type:
     if c == "|":
         return [[-1, 1], []]
     elif c == "-":
@@ -241,6 +243,7 @@ def day_10_s_mapper(m):
 
 
 def day_10_next_pos(pos: list, d: list):
+    # given a position and directions specified by that location, get next position:
     # get vertical moves:
     next_vert = []
     for dv in d[0]:
@@ -252,3 +255,9 @@ def day_10_next_pos(pos: list, d: list):
         next_hori.append([pos[0], pos[1] + dh])
 
     return next_vert + next_hori
+
+
+def day_12_groups(spring: list):
+    spr_groups = [len(list(g)) for val, g in itertools.groupby(spring) if val == 1]
+
+    return spr_groups
