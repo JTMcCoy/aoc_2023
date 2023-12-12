@@ -1,5 +1,6 @@
 import re
 import math
+import numpy as np
 from src.utils import (
     get_first_last_digits,
     day_3_dicts,
@@ -493,21 +494,114 @@ def day_10_1(values: list):
         else:
             prev_pos = cur_pos
             cur_pos = next_pos
-        steps += 1
+            steps += 1
 
     return steps
 
 
 def day_10_2(values: list):
-    return
+    # split into each element:
+    m = [x for x in values]
+
+    s_pos, d = day_10_s_mapper(m)
+
+    # get the ids of each location in loop:
+    loop_ids = [s_pos]
+
+    # first step is to the first starting points:
+    steps = 1
+    prev_pos = [s_pos, s_pos]
+    cur_pos = day_10_next_pos(s_pos, d)
+    found = False
+    while not found:
+        # take a step from each position:
+        next_pos = []
+        for pos, prv in zip(cur_pos, prev_pos):
+            next_pos += [
+                x
+                for x in day_10_next_pos(pos, day_10_dir(m[pos[0]][pos[1]]))
+                if x != prv
+            ]
+        if next_pos[0] == next_pos[1]:
+            loop_ids.append(next_pos[0])
+            found = True
+        else:
+            loop_ids += next_pos
+            prev_pos = cur_pos
+            cur_pos = next_pos
+            steps += 1
+    return loop_ids
 
 
 def day_11_1(values: list):
-    return
+    # get an int with space as 0 and galaxy as 1:
+    values = np.array(
+        [[int(y) for y in x.replace(".", "0").replace("#", "1")] for x in values]
+    )
+
+    # all 0 rows and columns:
+    exp_rows = [i for i, x in enumerate(values.sum(axis=1)) if x == 0]
+    exp_cols = [i for i, x in enumerate(values.sum(axis=0)) if x == 0]
+
+    # add cols of zeros from back to front:
+    for col in reversed(exp_cols):
+        values = np.concatenate(
+            [values[:, 0:col], np.zeros(shape=(values.shape[0], 1)), values[:, col:]],
+            axis=1,
+        )
+
+    # add rows of zeros from back to front:
+    for row in reversed(exp_rows):
+        values = np.concatenate(
+            [values[0:row, :], np.zeros(shape=(1, values.shape[1])), values[row:, :]],
+            axis=0,
+        )
+
+    # number each position:
+    values = values.cumsum().reshape(values.shape) * values
+
+    # distance between galaxies is sum of distance in rows and columns...
+    galaxies = np.argwhere(values)
+    dist = 0
+    for i, gal1 in enumerate(galaxies):
+        for gal2 in galaxies[i:]:
+            dist += np.abs(gal2[0] - gal1[0]) + np.abs(gal2[1] - gal1[1])
+
+    return dist
 
 
 def day_11_2(values: list):
-    return
+    # get an int with space as 0 and galaxy as 1:
+    values = np.array(
+        [[int(y) for y in x.replace(".", "0").replace("#", "1")] for x in values]
+    )
+
+    # all 0 rows and columns:
+    exp_rows = [i for i, x in enumerate(values.sum(axis=1)) if x == 0]
+    exp_cols = [i for i, x in enumerate(values.sum(axis=0)) if x == 0]
+
+    zero_mult = 1e6
+
+    # number each position:
+    values = values.cumsum().reshape(values.shape) * values
+
+    # distance between galaxies is sum of distance in rows and columns
+    # add in the expanded distances
+    galaxies = np.argwhere(values)
+    dist = 0
+    for i, gal1 in enumerate(galaxies):
+        for gal2 in galaxies[i:]:
+            # rows which will be expanded:
+            rows_sorted = sorted([gal1[0], gal2[0]])
+            cols_sorted = sorted([gal1[1], gal2[1]])
+            rows = [x for x in exp_rows if x in range(rows_sorted[0], rows_sorted[1])]
+            cols = [x for x in exp_cols if x in range(cols_sorted[0], cols_sorted[1])]
+            dist += (
+                np.abs(gal2[0] - gal1[0])
+                + np.abs(gal2[1] - gal1[1])
+                + (zero_mult - 1) * (len(rows + cols))
+            )
+    return int(dist)
 
 
 def day_12_1(values: list):
