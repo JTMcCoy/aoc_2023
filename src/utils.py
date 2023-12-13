@@ -282,27 +282,34 @@ def day_12_perms(miss_spr, n_un):
     return set([c for c in itertools.permutations(perm_list)])
 
 
-def day_13_reflector(pattern):
+def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
     col_sum = 0
+    col_mirror = []
     row_sum = 0
+    row_mirror = []
+    
     # check the columns which are identical to their neighbours:
-    for col in (
+    candidate_cols = (
         x[0] + 1
         for x in np.argwhere(np.sum(pattern[:, 1:] - pattern[:, 0:-1], axis=0) == 0)
-    ):
+    if (x[0] + 1) not in cols_ignore)
+    for col in candidate_cols:
         h_splits = np.array_split(pattern, np.array([col]), axis=1)
         cols = min([x.shape[1] for x in h_splits])
         if (np.flip(h_splits[0], axis=1)[:, 0:cols] == h_splits[1][:, 0:cols]).all():
             col_sum += col
+            col_mirror.append(col)
 
     # check the rows which are identical to their neighbours:
-    for row in (
+    candidate_rows = (
         x[0] + 1
         for x in np.argwhere(np.sum(pattern[1:, :] - pattern[0:-1, :], axis=1) == 0)
-    ):
+    if (x[0] + 1) not in rows_ignore)
+    for row in candidate_rows:
         v_splits = np.array_split(pattern, np.array([row]), axis=0)
         rows = min([x.shape[0] for x in v_splits])
         if (np.flip(v_splits[0], axis=0)[0:rows, :] == v_splits[1][0:rows, :]).all():
             row_sum += row
+            row_mirror.append(row)
 
-    return col_sum, row_sum
+    return col_sum, row_sum, col_mirror, row_mirror
