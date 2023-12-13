@@ -261,3 +261,9 @@ def day_12_groups(spring: list):
     spr_groups = [len(list(g)) for val, g in itertools.groupby(spring) if val == 1]
 
     return spr_groups
+
+
+def day_12_perms(miss_spr, n_un):
+    perm_list = [1] * miss_spr + [0] * (n_un - miss_spr)
+
+    return set([c for c in itertools.permutations(perm_list)])

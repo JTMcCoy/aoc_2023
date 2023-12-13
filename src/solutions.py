@@ -14,6 +14,7 @@ from src.utils import (
     day_10_dir,
     day_10_next_pos,
     day_12_groups,
+    day_12_perms,
 )
 
 
@@ -631,14 +632,14 @@ def day_12_1(values: list):
         unknown_idx = [i for i, x in enumerate(spring) if x == "?"]
         n_un = len(unknown_idx)
 
-        perm_list = [1] * miss_spr + [0] * (n_un - miss_spr)
+        # perm_list = day_12_perms(miss_spr, n_un)
 
-        # TODO this iterates over too many permutations, need to be able to prune
-        # for perm in set([c for c in itertools.permutations(perm_list)]):
-            # for idx, perm_val in zip(unknown_idx, perm):
-            #     spring[idx] = perm_val
-            # if group == day_12_groups(spring):
-            #     combinations += 1
+        # # TODO this iterates over too many permutations, need to be able to prune
+        # for perm in perm_list:
+        #     for idx, perm_val in zip(unknown_idx, perm):
+        #         spring[idx] = perm_val
+        #     if group == day_12_groups(spring):
+        #         combinations += 1
 
     return combinations
 
