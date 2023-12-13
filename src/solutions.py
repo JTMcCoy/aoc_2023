@@ -15,6 +15,7 @@ from src.utils import (
     day_10_next_pos,
     day_12_groups,
     day_12_perms,
+    day_13_reflector,
 )
 
 
@@ -649,7 +650,15 @@ def day_12_2(values: list):
 
 
 def day_13_1(values: list):
-    return
+    col_sum = 0
+    row_sum = 0
+
+    for pattern in values:
+        pattern_sums = day_13_reflector(pattern)
+        col_sum += pattern_sums[0]
+        row_sum += pattern_sums[1]
+
+    return col_sum + 100 * row_sum
 
 
 def day_13_2(values: list):

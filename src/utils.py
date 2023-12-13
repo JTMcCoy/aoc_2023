@@ -1,6 +1,7 @@
 from data.input_data import input
 from collections import Counter
 import itertools
+import numpy as np
 
 import re
 
@@ -24,6 +25,18 @@ def get_input(day: int) -> list:
     elif day == 9:
         # get each line as an entry and split to ints
         values = [[int(y) for y in x.split(" ")] for x in input[day].split("\n")]
+    elif day == 13:
+        # split double lines and then on lines:
+        # get each pattern as an array
+        values = [
+            np.array(
+                [
+                    [int(z) for z in y.replace(".", "0").replace("#", "1")]
+                    for y in x.split("\n")
+                ]
+            )
+            for x in input[day].split("\n\n")
+        ]
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]
@@ -267,3 +280,29 @@ def day_12_perms(miss_spr, n_un):
     perm_list = [1] * miss_spr + [0] * (n_un - miss_spr)
 
     return set([c for c in itertools.permutations(perm_list)])
+
+
+def day_13_reflector(pattern):
+    col_sum = 0
+    row_sum = 0
+    # check the columns which are identical to their neighbours:
+    for col in (
+        x[0] + 1
+        for x in np.argwhere(np.sum(pattern[:, 1:] - pattern[:, 0:-1], axis=0) == 0)
+    ):
+        h_splits = np.array_split(pattern, np.array([col]), axis=1)
+        cols = min([x.shape[1] for x in h_splits])
+        if (np.flip(h_splits[0], axis=1)[:, 0:cols] == h_splits[1][:, 0:cols]).all():
+            col_sum += col
+
+    # check the rows which are identical to their neighbours:
+    for row in (
+        x[0] + 1
+        for x in np.argwhere(np.sum(pattern[1:, :] - pattern[0:-1, :], axis=1) == 0)
+    ):
+        v_splits = np.array_split(pattern, np.array([row]), axis=0)
+        rows = min([x.shape[0] for x in v_splits])
+        if (np.flip(v_splits[0], axis=0)[0:rows, :] == v_splits[1][0:rows, :]).all():
+            row_sum += row
+
+    return col_sum, row_sum
