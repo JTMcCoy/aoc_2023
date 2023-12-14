@@ -16,6 +16,8 @@ from src.utils import (
     day_12_groups,
     day_12_perms,
     day_13_reflector,
+    day_14_col_roller,
+    day_14_dir_roller,
 )
 
 
@@ -745,28 +747,52 @@ def day_14_1(values: list):
     rocks = [0 for _ in values]
     for col_i in range(len(values[0])):
         col = [x[col_i] for x in values]
+        col_roll = day_14_col_roller(col)
 
-        last_sq = 0
-        idx = 0 if "O" in col else len(col)
-        while idx < len(col):
-            # location of next
-            if "#" in col[last_sq:]:
-                idx = col[last_sq:].index("#") + last_sq
-            else:
-                idx = len(col[last_sq:]) + last_sq
-
-            # number of 0s up to that square rock:
-            col_rocks = len([x for x in col[last_sq:idx] if x == "O"])
-            for row in range(col_rocks):
-                rocks[row + last_sq] += 1
-
-            last_sq = idx + 1
+        rocks = [
+            x + 1 if col_rock == "O" else x for x, col_rock in zip(rocks, col_roll)
+        ]
 
     return sum([(i + 1) * x for i, x in enumerate(reversed(rocks))])
 
 
 def day_14_2(values: list):
-    return
+    layouts = []
+    layouts.append(values)
+
+    # iterate over successive layouts until we find a repeated layout:
+    layout_found = False
+    iterations = 0
+    next_layout = values
+    while not layout_found:
+        next_layout = day_14_dir_roller(next_layout, iterations % 4)
+        iterations += 1
+        if next_layout in layouts:
+            layout_found = True
+            layouts.append(next_layout)
+            match_idx = layouts.index(next_layout)
+        else:
+            layouts.append(next_layout)
+
+    # a cycle is four iterations:
+    cycle_num = 1000000000
+    iter_num = cycle_num * 4
+
+    # there are match_idx-1 iterations before the repeats start:
+    iter_num = iter_num - (match_idx - 1)
+
+    # the pattern repeats every iterations - match_idx iterations:
+    rep = iterations - match_idx
+
+    # position in the repeating cycle is the remainder:
+    rem = (iter_num) % (rep)
+
+    # the position after iter_num is the remainder
+    # plus the iterations before the repeats start, match_idx-1
+    final_layout = layouts[match_idx - 1 + rem]
+    rocks = [len([y for y in x if y == "O"]) for x in final_layout]
+
+    return sum([(i + 1) * x for i, x in enumerate(reversed(rocks))])
 
 
 def day_15_1(values: list):

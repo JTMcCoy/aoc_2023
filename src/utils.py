@@ -287,13 +287,14 @@ def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
     col_mirror = []
     row_sum = 0
     row_mirror = []
-    
+
     # check the columns which are identical to their neighbours:
     # if cols_ignore is not empty, exclude from candidate_cols (it was found in part 1)
     candidate_cols = (
         x[0] + 1
         for x in np.argwhere(np.sum(pattern[:, 1:] != pattern[:, 0:-1], axis=0) == 0)
-    if (x[0] + 1) not in cols_ignore)
+        if (x[0] + 1) not in cols_ignore
+    )
     for col in candidate_cols:
         h_splits = np.array_split(pattern, np.array([col]), axis=1)
         cols = min([x.shape[1] for x in h_splits])
@@ -306,7 +307,8 @@ def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
     candidate_rows = (
         x[0] + 1
         for x in np.argwhere(np.sum(pattern[1:, :] != pattern[0:-1, :], axis=1) == 0)
-    if (x[0] + 1) not in rows_ignore)
+        if (x[0] + 1) not in rows_ignore
+    )
     for row in candidate_rows:
         v_splits = np.array_split(pattern, np.array([row]), axis=0)
         rows = min([x.shape[0] for x in v_splits])
@@ -315,3 +317,73 @@ def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
             row_mirror.append(row)
 
     return col_sum, row_sum, col_mirror, row_mirror
+
+
+def day_14_col_roller(col: list) -> list:
+    # utility to get the output of rolling round rocks, "O",
+    # upwards to the next square rock, "#"
+    col_roll = []
+
+    last_sq = 0
+    idx = 0
+    while idx < len(col):
+        # location of next
+        if "#" in col[last_sq:]:
+            idx = col[last_sq:].index("#") + last_sq
+            # number of 0s up to that square rock:
+            col_rocks = len([x for x in col[last_sq:idx] if x == "O"])
+            col_roll = (
+                col_roll
+                + ["O"] * col_rocks
+                + ["."] * (idx - last_sq - col_rocks)
+                + ["#"]
+            )
+        else:
+            idx = len(col[last_sq:]) + last_sq
+            # number of 0s up to that square rock:
+            col_rocks = len([x for x in col[last_sq:idx] if x == "O"])
+            col_roll = (
+                col_roll + ["O"] * col_rocks + ["."] * (idx - last_sq - col_rocks)
+            )
+
+        last_sq = idx + 1
+
+    return col_roll
+
+
+def day_14_dir_roller(layout: list, direction: int) -> list:
+    # roll a layout of rocks N, W, S or E
+    cols = len(layout[0])
+    rows = len(layout)
+    if direction == 0:
+        # tip North:
+        next_layout = []
+        for col_i in range(cols):
+            col = [x[col_i] for x in layout]
+            col_roll = day_14_col_roller(col)
+            next_layout.append(col_roll)
+        next_layout = ["".join([*x]) for x in zip(*next_layout)]
+    elif direction == 1:
+        # tip West:
+        next_layout = []
+        for col_i in range(rows):
+            col = [x for x in layout[col_i]]
+            col_roll = day_14_col_roller(col)
+            next_layout.append("".join(col_roll))
+    elif direction == 2:
+        # tip South:
+        next_layout = []
+        for col_i in range(cols):
+            col = list(reversed([x[col_i] for x in layout]))
+            col_roll = list(reversed(day_14_col_roller(col)))
+            next_layout.append(col_roll)
+        next_layout = ["".join([*x]) for x in zip(*next_layout)]
+    elif direction == 3:
+        # tip East:
+        next_layout = []
+        for col_i in range(rows):
+            col = list(reversed([x for x in layout[col_i]]))
+            col_roll = list(reversed(day_14_col_roller(col)))
+            next_layout.append("".join(col_roll))
+
+    return next_layout
