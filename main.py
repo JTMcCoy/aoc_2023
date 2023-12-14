@@ -1,7 +1,7 @@
 from src.runner import daily_run
 import time
 
-day = 13
+day = 14
 
 start = time.perf_counter_ns()
 part1, part2 = daily_run(day)
