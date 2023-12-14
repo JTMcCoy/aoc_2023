@@ -741,7 +741,28 @@ def day_13_2(values: list):
 
 
 def day_14_1(values: list):
-    return
+    # naive approach, go for each column
+    rocks = [0 for _ in values]
+    for col_i in range(len(values[0])):
+        col = [x[col_i] for x in values]
+
+        last_sq = 0
+        idx = 0 if "O" in col else len(col)
+        while idx < len(col):
+            # location of next
+            if "#" in col[last_sq:]:
+                idx = col[last_sq:].index("#") + last_sq
+            else:
+                idx = len(col[last_sq:]) + last_sq
+
+            # number of 0s up to that square rock:
+            col_rocks = len([x for x in col[last_sq:idx] if x == "O"])
+            for row in range(col_rocks):
+                rocks[row + last_sq] += 1
+
+            last_sq = idx + 1
+
+    return sum([(i + 1) * x for i, x in enumerate(reversed(rocks))])
 
 
 def day_14_2(values: list):
