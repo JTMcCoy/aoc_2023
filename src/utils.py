@@ -289,9 +289,10 @@ def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
     row_mirror = []
     
     # check the columns which are identical to their neighbours:
+    # if cols_ignore is not empty, exclude from candidate_cols (it was found in part 1)
     candidate_cols = (
         x[0] + 1
-        for x in np.argwhere(np.sum(pattern[:, 1:] - pattern[:, 0:-1], axis=0) == 0)
+        for x in np.argwhere(np.sum(pattern[:, 1:] != pattern[:, 0:-1], axis=0) == 0)
     if (x[0] + 1) not in cols_ignore)
     for col in candidate_cols:
         h_splits = np.array_split(pattern, np.array([col]), axis=1)
@@ -301,9 +302,10 @@ def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
             col_mirror.append(col)
 
     # check the rows which are identical to their neighbours:
+    # if rows_ignore is not empty, exclude from candidate_rows (it was found in part 1)
     candidate_rows = (
         x[0] + 1
-        for x in np.argwhere(np.sum(pattern[1:, :] - pattern[0:-1, :], axis=1) == 0)
+        for x in np.argwhere(np.sum(pattern[1:, :] != pattern[0:-1, :], axis=1) == 0)
     if (x[0] + 1) not in rows_ignore)
     for row in candidate_rows:
         v_splits = np.array_split(pattern, np.array([row]), axis=0)

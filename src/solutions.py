@@ -653,6 +653,7 @@ def day_13_1(values: list):
     col_sum = 0
     row_sum = 0
 
+    # for each pattern, get the number of columns/rows before the reflection
     for pattern in values:
         pattern_sums = day_13_reflector(pattern)
         col_sum += pattern_sums[0]
@@ -662,7 +663,81 @@ def day_13_1(values: list):
 
 
 def day_13_2(values: list):
-    return
+    col_sum = 0
+    row_sum = 0
+    for pattern in values:
+        # get the Part 1 locations
+        pattern_sums = day_13_reflector(pattern)
+        cols_ignore = pattern_sums[2]
+        rows_ignore = pattern_sums[3]
+
+        # look at other candidates: either identical pairs,
+        # or pairs that are off by one.
+        # Exclude the detections from Part 1
+        candidate_cols = [
+            x[0] + 1
+            for x in np.argwhere(
+                np.sum(pattern[:, 1:] != pattern[:, 0:-1], axis=0) <= 1
+            )
+            if (x[0] + 1) not in cols_ignore
+        ]
+        candidate_rows = [
+            x[0] + 1
+            for x in np.argwhere(
+                np.sum(pattern[1:, :] != pattern[0:-1, :], axis=1) <= 1
+            )
+            if (x[0] + 1) not in rows_ignore
+        ]
+
+        # find the location of the smudge:
+        smudge_found = False
+        row_found = []
+        col_found = []
+        while not smudge_found:
+            for col in candidate_cols:
+                h_splits = np.array_split(pattern, np.array([col]), axis=1)
+                cols = min([x.shape[1] for x in h_splits])
+                mismatch = np.argwhere(
+                    np.flip(h_splits[0], axis=1)[:, 0:cols] != h_splits[1][:, 0:cols]
+                )
+                if len(mismatch) == 1:
+                    # there is just one change to make
+                    smudge_loc = [mismatch[0, 0], col - mismatch[0, 1] - 1]
+                    col_found.append(col)
+                    smudge_found = True
+                    break
+
+            for row in candidate_rows:
+                v_splits = np.array_split(pattern, np.array([row]), axis=0)
+                rows = min([x.shape[0] for x in v_splits])
+                mismatch = np.argwhere(
+                    np.flip(v_splits[0], axis=0)[0:rows, :] != v_splits[1][0:rows, :]
+                )
+                if len(mismatch) == 1:
+                    # there is just one change to make
+                    smudge_loc = [row - mismatch[0, 0] - 1, mismatch[0, 1]]
+                    row_found.append(row)
+                    smudge_found = True
+                    break
+
+        # update pattern at the location of the smudge:
+        if pattern[smudge_loc[0], smudge_loc[1]] == 0:
+            pattern[smudge_loc[0], smudge_loc[1]] = 1
+        else:
+            pattern[smudge_loc[0], smudge_loc[1]] = 0
+
+        # ignore pairs from Part 1, and from the search above
+        # which weren't the smudge location
+        cols_ignore = [x for x in cols_ignore + candidate_cols if x not in col_found]
+        rows_ignore = [x for x in rows_ignore + candidate_rows if x not in row_found]
+
+        # add to the count of cols and rows
+        pattern_sums = day_13_reflector(
+            pattern, cols_ignore=cols_ignore, rows_ignore=rows_ignore
+        )
+        col_sum += pattern_sums[0]
+        row_sum += pattern_sums[1]
+    return col_sum + 100 * row_sum
 
 
 def day_14_1(values: list):
