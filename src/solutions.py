@@ -18,6 +18,7 @@ from src.utils import (
     day_13_reflector,
     day_14_col_roller,
     day_14_dir_roller,
+    day_15_hash,
 )
 
 
@@ -796,7 +797,8 @@ def day_14_2(values: list):
 
 
 def day_15_1(values: list):
-    return
+    sums = sum([day_15_hash(x) for x in values])
+    return sums
 
 
 def day_15_2(values: list):

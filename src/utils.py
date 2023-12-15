@@ -37,6 +37,9 @@ def get_input(day: int) -> list:
             )
             for x in input[day].split("\n\n")
         ]
+    elif day == 15:
+        # comma separated values, encode as ascii
+        values = [x.encode("ascii") for x in input[day].split(",")]
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]
@@ -387,3 +390,13 @@ def day_14_dir_roller(layout: list, direction: int) -> list:
             next_layout.append("".join(col_roll))
 
     return next_layout
+
+
+def day_15_hash(s: bytes) -> int:
+    h = 0
+    for c in s:
+        h += int(c)
+        h *= 17
+        h = h % 256
+
+    return h
