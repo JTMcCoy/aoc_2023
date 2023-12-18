@@ -504,7 +504,7 @@ def day_10_1(values: list):
         else:
             prev_pos = cur_pos
             cur_pos = next_pos
-            steps += 1
+        steps += 1
 
     return steps
 
