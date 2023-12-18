@@ -516,12 +516,14 @@ def day_10_2(values: list):
     s_pos, d = day_10_s_mapper(m)
 
     # get the ids of each location in loop:
-    loop_ids = [s_pos]
+    loop_ids = deque([s_pos])
 
     # first step is to the first starting points:
     steps = 1
     prev_pos = [s_pos, s_pos]
     cur_pos = day_10_next_pos(s_pos, d)
+    loop_ids.appendleft(cur_pos[0])
+    loop_ids.append(cur_pos[1])
     found = False
     while not found:
         # take a step from each position:
@@ -536,11 +538,20 @@ def day_10_2(values: list):
             loop_ids.append(next_pos[0])
             found = True
         else:
-            loop_ids += next_pos
+            loop_ids.appendleft(next_pos[0])
+            loop_ids.append(next_pos[1])
             prev_pos = cur_pos
             cur_pos = next_pos
-            steps += 1
-    return loop_ids
+        steps += 1
+
+    edge_points = steps * 2
+    # calculate area of polygon:
+    area = Polygon(loop_ids).area
+
+    # https://en.wikipedia.org/wiki/Pick%27s_theorem to get interior points:
+    interior_points = area - edge_points / 2 + 1
+
+    return int(interior_points)
 
 
 def day_11_1(values: list):
