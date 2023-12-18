@@ -463,17 +463,3 @@ def day_16_reflector(position: list, direction: list, mirrors: list):
     else:
         # illegal move, terminate
         return []
-
-
-def polygon_area(coords):
-    # from https://stackoverflow.com/a/64443317
-    # get x and y in vectors
-    x = [point[0] for point in coords]
-    y = [point[1] for point in coords]
-    # shift coordinates
-    x_ = x - np.mean(x)
-    y_ = y - np.mean(y)
-    # calculate area
-    correction = x_[-1] * y_[0] - y_[-1] * x_[0]
-    main_area = np.dot(x_[:-1], y_[1:]) - np.dot(y_[:-1], x_[1:])
-    return 0.5 * np.abs(main_area + correction)
