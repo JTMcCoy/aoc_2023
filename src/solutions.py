@@ -3,6 +3,7 @@ import math
 import numpy as np
 import itertools
 from collections import deque
+from shapely.prepared import prep
 from src.utils import (
     get_first_last_digits,
     day_3_dicts,
@@ -20,7 +21,8 @@ from src.utils import (
     day_14_col_roller,
     day_14_dir_roller,
     day_15_hash,
-    day_16_reflector
+    day_16_reflector,
+    polygon_area,
 )
 
 
@@ -853,7 +855,28 @@ def day_17_2(values: list):
 
 
 def day_18_1(values: list):
-    return
+    # split into direction and distance:
+    dir_dist = [[x.split(" ")[0], int(x.split(" ")[1])] for x in values]
+
+    # get the locations we go to:
+    locs = [[0, 0]]
+    loc = locs[-1]
+    for dir, dist in dir_dist:
+        delta = [0, dist] if dir in ["L", "R"] else [dist, 0]
+        delta = [-x if dir in ["U", "L"] else x for x in delta]
+        locs.append([x + y for x, y in zip(loc, delta)])
+        loc = locs[-1]
+
+    # assume no overlapping edge points...
+    edge_points = sum([abs(x[1]) for x in dir_dist])
+
+    # calculate area of polygon using solution from stackoverflow:
+    area = int(round(polygon_area(locs)))
+
+    # https://en.wikipedia.org/wiki/Pick%27s_theorem to get interior points:
+    interior_points = area - edge_points / 2 + 1
+
+    return int(interior_points + edge_points)
 
 
 def day_18_2(values: list):
