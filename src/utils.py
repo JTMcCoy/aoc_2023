@@ -400,3 +400,66 @@ def day_15_hash(s: bytes) -> int:
         h = h % 256
 
     return h
+
+
+def day_16_reflector(position: list, direction: list, mirrors: list):
+    next_position = [x + y for x, y in zip(position, direction)]
+    if (
+        (next_position[0] < 0)
+        | (next_position[1] < 0)
+        | (next_position[0] >= len(mirrors))
+        | (next_position[1] >= len(mirrors[0]))
+    ):
+        value = 5
+    else:
+        value = mirrors[next_position[0]][next_position[1]]
+    if value == 0:
+        # keep going in the same direction
+        return [(next_position, direction)]
+    if value == 1:
+        # vertical splitter:
+        if (direction == [1, 0]) | (direction == [-1, 0]):
+            # moving up or down:
+            return [(next_position, direction)]
+        else:
+            # moving left or right:
+            return [(next_position, [-1, 0]), (next_position, [1, 0])]
+    elif value == 2:
+        # horizontal splitter:
+        if (direction == [1, 0]) | (direction == [-1, 0]):
+            # moving up or down:
+            return [(next_position, [0, -1]), (next_position, [0, 1])]
+        else:
+            # moving left or right:
+            return [(next_position, direction)]
+    elif value == 3:
+        # forward slash:
+        if direction == [1, 0]:
+            # moving down:
+            return [(next_position, [0, -1])]
+        elif direction == [-1, 0]:
+            # moving up:
+            return [(next_position, [0, 1])]
+        elif direction == [0, 1]:
+            # moving right:
+            return [(next_position, [-1, 0])]
+        elif direction == [0, -1]:
+            # moving left:
+            return [(next_position, [1, 0])]
+    elif value == 4:
+        # backslash:
+        if direction == [1, 0]:
+            # moving down:
+            return [(next_position, [0, 1])]
+        elif direction == [-1, 0]:
+            # moving up:
+            return [(next_position, [0, -1])]
+        elif direction == [0, 1]:
+            # moving right:
+            return [(next_position, [1, 0])]
+        elif direction == [0, -1]:
+            # moving left:
+            return [(next_position, [-1, 0])]
+    else:
+        # illegal move, terminate
+        return []

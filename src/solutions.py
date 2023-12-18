@@ -2,6 +2,7 @@ import re
 import math
 import numpy as np
 import itertools
+from collections import deque
 from src.utils import (
     get_first_last_digits,
     day_3_dicts,
@@ -19,6 +20,7 @@ from src.utils import (
     day_14_col_roller,
     day_14_dir_roller,
     day_15_hash,
+    day_16_reflector
 )
 
 
@@ -806,7 +808,36 @@ def day_15_2(values: list):
 
 
 def day_16_1(values: list):
-    return
+    # replace characters:
+    mirrors = [
+        [
+            int(y)
+            for y in x.replace(".", "0")
+            .replace("|", "1")
+            .replace("-", "2")
+            .replace("/", "3")
+            .replace("\\", "4")
+        ]
+        for x in values
+    ]
+
+    loc_dirs = [([0, 0], [0, 1])]
+    terminated = False
+
+    queue = deque(loc_dirs)
+    while not terminated:
+        x = queue.pop()
+        next_x = day_16_reflector(x[0], x[1], mirrors)
+
+        for loc_dir in next_x:
+            if loc_dir not in loc_dirs:
+                # only append location/direction pairs we haven't yet visited
+                loc_dirs.append(loc_dir)
+                queue.append(loc_dir)
+        if len(queue) == 0:
+            terminated = True
+
+    return len(set([str(x[0]) for x in loc_dirs]))
 
 
 def day_16_2(values: list):
