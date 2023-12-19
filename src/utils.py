@@ -40,6 +40,30 @@ def get_input(day: int) -> list:
     elif day == 15:
         # comma separated values, encode as ascii
         values = [x.encode("ascii") for x in input[day].split(",")]
+    elif day == 19:
+        # split workflows and parts:
+        workflows, parts = input[day].split("\n\n")
+
+        # get parts as dicts:
+        parts = [x[1:-1].split(",") for x in parts.split("\n")]
+        parts = [{y.split("=")[0]: y.split("=")[-1] for y in x} for x in parts]
+
+        # get workflows as dicts:
+        workflows = {
+            x.split("{")[0]: [
+                {
+                    y.split(":")[0][0]: {
+                        "comp_val": y.split(":")[0][1:],
+                        "dest": y.split(":")[-1],
+                    }
+                }
+                if ":" in y
+                else y
+                for y in x.split("{")[-1].replace("}", "").split(",")
+            ]
+            for x in workflows.split("\n")
+        }
+        values = workflows, parts
     else:
         # get each line as an entry
         values = [x for x in input[day].split("\n")]

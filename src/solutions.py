@@ -922,7 +922,33 @@ def day_18_2(values: list):
 
 
 def day_19_1(values: list):
-    return
+    workflows, parts = values
+
+    a_parts = []
+    for part in parts:
+        is_sorted = False
+        dest = "in"
+        while not is_sorted:
+            workflow = workflows[dest]
+            moves = deque(workflow)
+            moved = False
+            while (not moved) & (len(moves) > 0):
+                move = moves.popleft()
+                if isinstance(move, dict):
+                    for key in move:
+                        if eval(part[key] + move[key]["comp_val"]):
+                            dest = move[key]["dest"]
+                            moved = True
+                            break
+                else:
+                    dest = move
+            if dest == "A":
+                a_parts.append(part)
+                is_sorted = True
+            elif dest == "R":
+                is_sorted = True
+
+    return sum(sum(int(x[y]) for y in x) for x in a_parts)
 
 
 def day_19_2(values: list):
