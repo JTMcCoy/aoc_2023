@@ -15,8 +15,7 @@ from src.utils import (
     day_10_s_mapper,
     day_10_dir,
     day_10_next_pos,
-    day_12_groups,
-    day_12_perms,
+    day_12_depth_search,
     day_13_reflector,
     day_14_col_roller,
     day_14_dir_roller,
@@ -627,7 +626,7 @@ def day_11_2(values: list):
 
 def day_12_1(values: list):
     springs = [x.split(" ")[0] for x in values]
-    grps = [[int(y) for y in x.split(" ")[1].replace(",", "")] for x in values]
+    grps = [[int(y) for y in x.split(" ")[1].split(",")] for x in values]
 
     # map springs to ints:
     springs = [
@@ -646,18 +645,9 @@ def day_12_1(values: list):
         # non_working springs to add:
         miss_spr = group_spr - n_spr
 
-        # unknown springs:
-        unknown_idx = [i for i, x in enumerate(spring) if x == "?"]
-        n_un = len(unknown_idx)
+        combs = day_12_depth_search(spring, group, 0, miss_spr, 0)
 
-        # perm_list = day_12_perms(miss_spr, n_un)
-
-        # # TODO this iterates over too many permutations, need to be able to prune
-        # for perm in perm_list:
-        #     for idx, perm_val in zip(unknown_idx, perm):
-        #         spring[idx] = perm_val
-        #     if group == day_12_groups(spring):
-        #         combinations += 1
+        combinations += combs
 
     return combinations
 

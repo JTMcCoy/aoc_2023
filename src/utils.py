@@ -303,10 +303,63 @@ def day_12_groups(spring: list):
     return spr_groups
 
 
-def day_12_perms(miss_spr, n_un):
-    perm_list = [1] * miss_spr + [0] * (n_un - miss_spr)
+def day_12_compare(spring: list, group: list, final_comparison: bool = True):
+    # given a (complete or partial) spring, see if it's consistent with group:
+    spring_groups = day_12_groups(spring)
 
-    return set([c for c in itertools.permutations(perm_list)])
+    if not final_comparison:
+        return spring_groups <= group[0 : len(spring_groups)]
+    else:
+        return spring_groups == group
+
+
+def day_12_depth_search(
+    spring: list,
+    group: list,
+    non_work_added: int,
+    missing_to_add: int,
+    combinations: int,
+) -> int:
+    # non-working springs in group:
+    group_spr = sum(group)
+
+    # non-working springs in spring:
+    n_spr = sum([x for x in spring if x != "?"])
+
+    # non_working springs to add:
+    miss_spr = group_spr - n_spr
+
+    # unknown springs:
+    unknown_idx = [i for i, x in enumerate(spring) if x == "?"]
+    n_un = len(unknown_idx)
+
+    if len(unknown_idx) == 0:
+        if day_12_compare(spring, group):
+            combinations += 1
+    elif day_12_compare(spring[0 : unknown_idx[0]], group, final_comparison=False) & (
+        miss_spr <= n_un
+    ):
+        # if we have a consistent set so far
+        # AND we have at least as many unknown positions as non-working springs to add
+        # THEN we try filling the next position:
+
+        if non_work_added <= missing_to_add:
+            # if we haven't yet added all the non-working springs
+            # THEN add a non-working spring
+            next_spring = spring[:]
+            next_spring[unknown_idx[0]] = 1
+            combinations = day_12_depth_search(
+                next_spring, group, non_work_added + 1, missing_to_add, combinations
+            )
+
+        # always try to add a working spring
+        next_spring = spring[:]
+        next_spring[unknown_idx[0]] = 0
+        combinations = day_12_depth_search(
+            next_spring, group, non_work_added, missing_to_add, combinations
+        )
+
+    return combinations
 
 
 def day_13_reflector(pattern, cols_ignore=[], rows_ignore=[]):
