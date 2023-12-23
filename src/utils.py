@@ -540,3 +540,19 @@ def day_16_reflector(position: list, direction: list, mirrors: list):
     else:
         # illegal move, terminate
         return []
+
+
+def day_21_stepper(pos: list, m: list) -> list:
+    next_pos = []
+    for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+        map_pos = [x + y for x, y in zip(pos, dir)]
+        if (
+            (map_pos[0] >= 0)
+            & (map_pos[1] >= 0)
+            & (map_pos[0] < len(m))
+            & (map_pos[1] < len(m[0]))
+        ):
+            if m[map_pos[0]][map_pos[1]] != "#":
+                next_pos.append((map_pos[0], map_pos[1]))
+
+    return next_pos

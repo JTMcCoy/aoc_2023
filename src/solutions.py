@@ -21,6 +21,7 @@ from src.utils import (
     day_14_dir_roller,
     day_15_hash,
     day_16_reflector,
+    day_21_stepper,
 )
 
 
@@ -954,7 +955,20 @@ def day_20_2(values: list):
 
 
 def day_21_1(values: list):
-    return
+    # find the S:
+    s_pos = [(i, x.index("S")) for i, x in enumerate(values) if "S" in x]
+
+    pos_list = [s_pos]
+    steps = 0
+
+    while steps < 64:
+        steps += 1
+        next_pos_list = []
+        for pos in pos_list[-1]:
+            next_pos_list += day_21_stepper(pos, values)
+        pos_list.append(list(set(next_pos_list)))
+
+    return len(pos_list[64])
 
 
 def day_21_2(values: list):
