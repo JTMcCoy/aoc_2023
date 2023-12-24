@@ -542,6 +542,31 @@ def day_16_reflector(position: list, direction: list, mirrors: list):
         return []
 
 
+def day_17_stepper(pos: list, m: list) -> list:
+    next_pos = []
+    for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+        map_pos = [x + y for x, y in zip(pos[0], dir)]
+        if (
+            (map_pos[0] >= 0)
+            & (map_pos[1] >= 0)
+            & (map_pos[0] < len(m))
+            & (map_pos[1] < len(m[0]))
+            & (dir != (-1 * pos[1][0], -1 * pos[1][1])) # don't go back the way we came!
+        ):
+            next_pos.append(
+                (
+                    (map_pos[0], map_pos[1]),  # position
+                    dir,  # direction of movement
+                    pos[2] + 1
+                    if dir == pos[1]
+                    else 1,  # counter for consecutive movement
+                    pos[3] + int(m[map_pos[0]][map_pos[1]]),  # accumulator for cooling
+                )
+            )
+
+    return next_pos
+
+
 def day_21_stepper(pos: list, m: list) -> list:
     next_pos = []
     for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:

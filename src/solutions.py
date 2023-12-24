@@ -21,6 +21,7 @@ from src.utils import (
     day_14_dir_roller,
     day_15_hash,
     day_16_reflector,
+    day_17_stepper,
     day_21_stepper,
 )
 
@@ -848,7 +849,41 @@ def day_16_2(values: list):
 
 
 def day_17_1(values: list):
-    return
+    s_pos = (0, 0)
+    steps_in_dir = 0
+    cumulative_loss = 0
+    pos_one = (s_pos, (0, 0), steps_in_dir, cumulative_loss)
+
+    queue = [pos_one]
+
+    # worst case is a visit to every cell:
+    best_so_far = sum([sum(int(x) for x in y) for y in values])
+
+    visited = set(pos_one[0:3])
+    while queue:
+        curr_point = queue.pop(0)
+        if curr_point[0] == (len(values) - 1, len(values[0]) - 1):
+            if curr_point[3] < best_so_far:
+                best_so_far = curr_point[3]
+
+            # remove elements with distance greater than best_so_far
+            queue = [x for x in queue if x[3] < best_so_far]
+
+            # because we've sorted the queue, this is always empty...
+            # so we've found the shortest path!
+        else:
+            for next_point in day_17_stepper(curr_point, values):
+                if next_point[0:3] not in visited:
+                    # if this is an unvisited point so far,
+                    # and we haven't exceeded the lowest loss
+                    # or number of consecutive moves, append
+                    if (next_point[3] < best_so_far) & (next_point[2] <= 3):
+                        queue.append(next_point)
+                        visited.add(next_point[0:3])
+            # sort the queue by distance to follow shortest path so far:
+            queue.sort(key=lambda quad: quad[3])
+
+    return curr_point[3]
 
 
 def day_17_2(values: list):
