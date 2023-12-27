@@ -852,11 +852,11 @@ def day_17_1(values: list):
     s_pos = (0, 0)
     steps_in_dir = 0
     cumulative_loss = 0
-    pos_one = (s_pos, (0, 0), steps_in_dir, cumulative_loss)
+    curr_point = (s_pos, (0, 0), steps_in_dir, cumulative_loss)
 
-    queue = [pos_one]
+    queue = [curr_point]
     # BFS to find best path:
-    visited = set(pos_one[0:3])
+    visited = set(curr_point[0:3])
     while queue:
         curr_point = queue.pop(0)
         if curr_point[0] == (len(values) - 1, len(values[0]) - 1):
@@ -867,7 +867,7 @@ def day_17_1(values: list):
                 if next_point[0:3] not in visited:
                     # if this is an unvisited point so far,
                     # and we haven't exceeded the number of consecutive moves, append
-                    if (next_point[2] <= 3):
+                    if next_point[2] <= 3:
                         queue.append(next_point)
                         visited.add(next_point[0:3])
             # sort the queue by distance to follow shortest path so far:
@@ -877,7 +877,46 @@ def day_17_1(values: list):
 
 
 def day_17_2(values: list):
-    return
+    s_pos = (0, 0)
+    steps_in_dir = 0
+    cumulative_loss = 0
+    curr_point = (s_pos, (0, 0), steps_in_dir, cumulative_loss)
+
+    queue = [curr_point]
+    # BFS to find best path:
+    visited = set(curr_point[0:3])
+
+    # manually add first two options to the list, as direction of start point is (0,0):
+    curr_point = queue.pop(0)
+    for next_point in day_17_stepper(curr_point, values):
+        # if we haven't moved 4 points yet, continue in same direction:
+        queue.append(next_point)
+        visited.add(next_point[0:3])
+
+    while queue:
+        curr_point = queue.pop(0)
+        if (curr_point[0] == (len(values) - 1, len(values[0]) - 1)) & (
+            curr_point[2] >= 4
+        ):
+            # because we've sorted the queue, this is always the shortest path!
+            queue = []
+        else:
+            for next_point in day_17_stepper(curr_point, values):
+                if next_point[0:3] not in visited:
+                    # if this is an unvisited point so far,
+                    # and we haven't exceeded the number of consecutive moves, append
+                    if next_point[2] <= 10:
+                        # if we haven't moved 4 points yet, continue in same direction:
+                        if (curr_point[2] < 4) & (next_point[1] == curr_point[1]):
+                            queue.append(next_point)
+                            visited.add(next_point[0:3])
+                        # if we've moved more than four points, append any direction:
+                        elif curr_point[2] >= 4:
+                            queue.append(next_point)
+                            visited.add(next_point[0:3])
+            # sort the queue by distance to follow shortest path so far:
+            queue.sort(key=lambda quad: quad[3])
+    return curr_point[3]
 
 
 def day_18_1(values: list):
